@@ -1,0 +1,20 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { skillGroups } from '../lib/data';
+---
+
+<section class="section mb-16" id="skills">
+  <SectionHeader num="02" title="Skills" />
+  <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+    {skillGroups.map((group) => (
+      <div class="card p-5">
+        <div class="mb-3 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--muted);">{group.label}</div>
+        <div class="flex flex-wrap gap-1.5">
+          {group.skills.map((skill) => (
+            <span class:list={['chip', skill.accent && 'accent']}>{skill.name}</span>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

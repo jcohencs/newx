@@ -1,0 +1,20 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { getCollection } from 'astro:content';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="section mb-16" id="projects">
+  <SectionHeader num="03" title="Projects" />
+  <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+    {allProjects.map((project) => (
+      <a href={`${base}/projects/${project.id}/`} class="card flex flex-col gap-1.5 p-5 no-underline">
+        <div class="mb-0.5 text-lg" style="color: var(--text2);"><i class={`ti ${project.data.icon}`} aria-hidden="true"></i></div>
+        <div class="text-sm font-medium" style="color: var(--text);">{project.data.title}</div>
+        <p class="text-[13px] leading-relaxed" style="color: var(--text2);">{project.data.summary}</p>
+      </a>
+    ))}
+  </div>
+</section>

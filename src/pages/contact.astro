@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contact } from '../lib/data';
+---
+
+<BaseLayout title="Contact — Joshua Cohen" description="Get in touch with Joshua Cohen.">
+  <main class="mx-auto max-w-[640px] px-5 pt-24 pb-28 sm:px-10 sm:pt-28">
+    <header class="mb-10">
+      <div class="mb-3 text-[11px] font-medium uppercase tracking-wider" style="color: var(--muted);">Joshua Cohen</div>
+      <h1 class="mb-3 text-[clamp(30px,7vw,56px)] leading-tight tracking-tight" style="font-family: var(--font-serif);">
+        Get in <em class="italic" style="color: var(--text2);">Touch</em>
+      </h1>
+      <p class="text-sm font-light leading-relaxed" style="color: var(--text2);">
+        Have a question, an opportunity, or just want to talk tech, IoT, or the Pokémon TCG meta? Send a note below, or reach me directly at
+        <a href={`mailto:${contact.email}`} style="color: var(--text); border-bottom: 0.5px solid var(--border-h);">{contact.email}</a>.
+      </p>
+    </header>
+
+    <form
+      class="card flex flex-col gap-4 p-7"
+      action="https://formspree.io/f/YOUR_FORM_ID"
+      method="POST"
+      id="contact-form"
+    >
+      <div class="flex flex-col gap-1.5">
+        <label for="name" class="text-[11px] font-semibold uppercase tracking-widest" style="color: var(--muted);">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          required
+          class="rounded-lg border-[0.5px] px-3.5 py-2.5 text-sm outline-none transition-colors"
+          style="background: var(--pill-bg); border-color: var(--pill-border); color: var(--text);"
+        />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label for="email" class="text-[11px] font-semibold uppercase tracking-widest" style="color: var(--muted);">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          required
+          class="rounded-lg border-[0.5px] px-3.5 py-2.5 text-sm outline-none transition-colors"
+          style="background: var(--pill-bg); border-color: var(--pill-border); color: var(--text);"
+        />
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label for="message" class="text-[11px] font-semibold uppercase tracking-widest" style="color: var(--muted);">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          required
+          class="rounded-lg border-[0.5px] px-3.5 py-2.5 text-sm outline-none transition-colors"
+          style="background: var(--pill-bg); border-color: var(--pill-border); color: var(--text);"
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        class="glass inline-flex w-fit items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium"
+        style="color: var(--fg-pill);"
+      >
+        Send Message <i class="ti ti-send text-[14px]" aria-hidden="true"></i>
+      </button>
+      <p id="contact-status" class="hidden text-[13px]" style="color: var(--text2);"></p>
+    </form>
+  </main>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('contact-status');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!status) return;
+    status.classList.remove('hidden');
+    status.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { Accept: 'application/json' },
+      });
+      if (res.ok) {
+        status.textContent = "Thanks — your message is on its way. I'll get back to you soon.";
+        form.reset();
+      } else {
+        status.textContent = 'Something went wrong. Please email me directly instead.';
+      }
+    } catch {
+      status.textContent = 'Something went wrong. Please email me directly instead.';
+    }
+  });
+</script>

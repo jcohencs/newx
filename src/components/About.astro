@@ -1,0 +1,81 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { about } from '../lib/data';
+---
+
+<section class="section mb-16" id="about">
+  <SectionHeader num="00" title="About Me" />
+  <div class="relative">
+    <div class="card relative overflow-visible p-7" id="about-card">
+      <canvas id="lightning-canvas"></canvas>
+      <div class="pikachu-wrap" id="pikachu-wrap">
+        <div class="pika-bubble" id="pika-bubble">Pika!</div>
+        <img src="https://play.pokemonshowdown.com/sprites/gen5ani/pikachu.gif" alt="Pikachu" draggable="false" />
+      </div>
+      <div class="flex flex-col gap-3">
+        {about.paragraphs.map((p) => (
+          <p class="text-sm leading-loose" style="color: var(--text2);">{p}</p>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initPikachu() {
+    const wrap = document.getElementById('pikachu-wrap');
+    const bubble = document.getElementById('pika-bubble');
+    const card = document.getElementById('about-card') as HTMLDivElement | null;
+    const lightningCanvas = document.getElementById('lightning-canvas') as HTMLCanvasElement | null;
+    if (!wrap || !bubble || !card || !lightningCanvas) return;
+
+    const quips = ['Pika!', 'Pika pika!', 'Pikachu!', '⚡', 'Chaaaa!'];
+    let bubbleTimeout: number;
+
+    wrap.addEventListener('click', () => {
+      bubble.textContent = quips[Math.floor(Math.random() * quips.length)];
+      bubble.classList.add('show');
+      clearTimeout(bubbleTimeout);
+      bubbleTimeout = window.setTimeout(() => bubble.classList.remove('show'), 1200);
+      strike();
+    });
+
+    function strike() {
+      const ctx = lightningCanvas!.getContext('2d');
+      if (!ctx) return;
+      const rect = card!.getBoundingClientRect();
+      lightningCanvas!.width = rect.width;
+      lightningCanvas!.height = rect.height;
+      let frame = 0;
+      const maxFrames = 10;
+      function drawBolt() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, lightningCanvas!.width, lightningCanvas!.height);
+        if (frame >= maxFrames) return;
+        if (frame % 3 !== 0) {
+          frame++;
+          requestAnimationFrame(drawBolt);
+          return;
+        }
+        const startX = lightningCanvas!.width - 70;
+        let x = startX;
+        let y = 0;
+        ctx.strokeStyle = 'rgba(255,230,80,0.85)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        while (y < lightningCanvas!.height * 0.6) {
+          x += (Math.random() - 0.5) * 26;
+          y += Math.random() * 18 + 10;
+          ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        frame++;
+        requestAnimationFrame(drawBolt);
+      }
+      drawBolt();
+    }
+  }
+
+  initPikachu();
+</script>

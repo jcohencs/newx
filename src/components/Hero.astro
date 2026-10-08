@@ -1,0 +1,28 @@
+---
+import { contact, hero } from '../lib/data';
+---
+
+<section class="mx-auto grid max-w-[960px] grid-cols-1 items-end gap-6 px-5 pt-24 pb-8 sm:grid-cols-[1fr_auto] sm:px-10 sm:pt-28">
+  <div>
+    <div class="mb-3 text-[11px] font-medium uppercase tracking-wider" style="color: var(--muted);">{hero.eyebrow}</div>
+    <h1 class="mb-3 text-[clamp(36px,9vw,72px)] leading-none tracking-tight" style="font-family: var(--font-serif);">
+      {hero.name} <em class="italic" style="color: var(--text2);">{hero.nameAccent}</em>
+    </h1>
+    <p class="max-w-[480px] text-sm font-light leading-relaxed" style="color: var(--text2);">{hero.tagline}</p>
+  </div>
+  <div class="flex flex-row flex-wrap items-start gap-1.5 pb-0.5 sm:flex-col sm:items-end">
+    <a href={`mailto:${contact.email}`} class="glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs no-underline transition-transform hover:-translate-y-0.5" style="color: var(--fg-pill);">
+      <i class="ti ti-mail text-[13px]" aria-hidden="true"></i> {contact.email}
+    </a>
+    <a href={`tel:${contact.phoneHref}`} class="glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs no-underline transition-transform hover:-translate-y-0.5" style="color: var(--fg-pill);">
+      <i class="ti ti-phone text-[13px]" aria-hidden="true"></i> {contact.phone}
+    </a>
+    <a href={contact.linkedinHref} target="_blank" rel="noopener" class="glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs no-underline transition-transform hover:-translate-y-0.5" style="color: var(--fg-pill);">
+      <i class="ti ti-brand-linkedin text-[13px]" aria-hidden="true"></i> {contact.linkedin}
+    </a>
+    <span class="glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs" style="color: var(--fg-pill);">
+      <i class="ti ti-map-pin text-[13px]" aria-hidden="true"></i> {contact.location}
+    </span>
+  </div>
+</section>
+<div class="relative z-10 mx-auto h-[0.5px] max-w-[960px]" style="background: var(--border);"></div>

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title={`${project.data.title} — Joshua Cohen`} description={project.data.summary}>
+  <main class="mx-auto max-w-[720px] px-5 pt-24 pb-28 sm:px-10 sm:pt-28">
+    <a href={`${base}/#projects`} class="mb-8 inline-flex items-center gap-1.5 text-xs font-medium no-underline transition-all" style="color: var(--text2);">
+      <i class="ti ti-arrow-left text-[14px]" aria-hidden="true"></i> Back to Projects
+    </a>
+    <header class="mb-8">
+      <div class="mb-3 text-2xl" style="color: var(--text2);"><i class={`ti ${project.data.icon}`} aria-hidden="true"></i></div>
+      <h1 class="mb-3 text-[clamp(26px,5vw,40px)] leading-tight tracking-tight" style="font-family: var(--font-serif);">{project.data.title}</h1>
+      <p class="mb-4 text-[15px] font-light leading-relaxed" style="color: var(--text2);">{project.data.summary}</p>
+      <div class="flex flex-wrap gap-1.5">
+        {project.data.tags.map((tag) => (<span class="chip">{tag}</span>))}
+      </div>
+    </header>
+    <div class="my-8 h-[0.5px]" style="background: var(--border);"></div>
+    <div class="prose-project text-[15px] leading-loose" style="color: var(--text2);">
+      <Content />
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .prose-project :global(p) {
+    margin-bottom: 1.25rem;
+  }
+  .prose-project :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--text);
+    margin: 2rem 0 0.75rem;
+    letter-spacing: -0.3px;
+  }
+  .prose-project :global(ul) {
+    margin: 0 0 1.25rem 1.25rem;
+    list-style: disc;
+  }
+  .prose-project :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .prose-project :global(strong) {
+    color: var(--text);
+    font-weight: 500;
+  }
+</style>

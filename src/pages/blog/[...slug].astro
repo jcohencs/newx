@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const dateFmt = post.data.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+---
+
+<BaseLayout title={`${post.data.title} — Joshua Cohen`} description={post.data.excerpt}>
+  <main class="mx-auto max-w-[720px] px-5 pt-24 pb-28 sm:px-10 sm:pt-28">
+    <a href={`${base}/blog/`} class="mb-8 inline-flex items-center gap-1.5 text-xs font-medium no-underline transition-all" style="color: var(--text2);">
+      <i class="ti ti-arrow-left text-[14px]" aria-hidden="true"></i> Back to Blog
+    </a>
+    <article>
+      <header class="mb-8">
+        <div class="mb-2.5 flex items-center gap-2 text-[11px]" style="color: var(--muted);">
+          <span>{dateFmt}</span>
+          <span class="inline-block h-[3px] w-[3px] rounded-full" style="background: var(--muted);"></span>
+          <span>{post.data.tag}</span>
+          <span class="inline-block h-[3px] w-[3px] rounded-full" style="background: var(--muted);"></span>
+          <span>{post.data.readingTime}</span>
+        </div>
+        <h1 class="mb-3 text-[clamp(26px,5vw,40px)] leading-tight tracking-tight" style="font-family: var(--font-serif);">{post.data.title}</h1>
+        <p class="text-[15px] font-light leading-relaxed" style="color: var(--text2);">{post.data.excerpt}</p>
+      </header>
+      <div class="my-8 h-[0.5px]" style="background: var(--border);"></div>
+      <div class="prose-post text-[15px] leading-loose" style="color: var(--text2);">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  .prose-post :global(p) {
+    margin-bottom: 1.25rem;
+  }
+  .prose-post :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--text);
+    margin: 2rem 0 0.75rem;
+    letter-spacing: -0.3px;
+  }
+  .prose-post :global(strong) {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .prose-post :global(a) {
+    color: var(--text);
+    border-bottom: 0.5px solid var(--border-h);
+  }
+</style>

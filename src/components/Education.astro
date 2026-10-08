@@ -1,0 +1,27 @@
+---
+import SectionHeader from './SectionHeader.astro';
+import { education } from '../lib/data';
+---
+
+<section class="section mb-16" id="education">
+  <SectionHeader num="04" title="Education" />
+  <div class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+    {education.map((edu) => (
+      <div class="card p-5">
+        <div class="mb-1 flex items-start justify-between">
+          <div class="text-sm font-medium">{edu.name}</div>
+          <div class="text-[11px]" style="color: var(--muted);">{edu.date}</div>
+        </div>
+        <div class="mb-3.5 text-[13px]" style="color: var(--text2);">{edu.degree}</div>
+        {edu.coursework && (
+          <>
+            <div class="mb-2 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--muted);">Relevant Coursework</div>
+            <div class="flex flex-wrap gap-1.5">
+              {edu.coursework.map((c) => (<span class="chip">{c}</span>))}
+            </div>
+          </>
+        )}
+      </div>
+    ))}
+  </div>
+</section>

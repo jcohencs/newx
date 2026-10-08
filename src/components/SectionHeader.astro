@@ -1,0 +1,13 @@
+---
+interface Props {
+  num: string;
+  title: string;
+}
+const { num, title } = Astro.props;
+---
+
+<div class="mb-6 flex items-center gap-3">
+  <span class="text-[10px] font-semibold tracking-widest tabular-nums" style="color: var(--text3);">{num}</span>
+  <h2 class="text-2xl tracking-tight" style="font-family: var(--font-serif);">{title}</h2>
+  <div class="h-[0.5px] flex-1" style="background: var(--border);"></div>
+</div>

@@ -1,0 +1,109 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { navLinks } from '../lib/data';
+
+const path = new URL(Astro.request.url).pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function isActive(href: string) {
+  if (href.startsWith('/#')) return path === base + '/' || path === base;
+  const clean = href.replace(/\/$/, '');
+  return path.replace(/\/$/, '') === base + clean;
+}
+---
+
+<nav
+  class="fixed inset-x-0 top-0 z-[200] flex h-14 items-center justify-between border-b-[0.5px] px-4 sm:px-10"
+  style="background: var(--nav-bg); border-color: var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);"
+>
+  <a href={`${base}/`} class="flex-shrink-0 pt-0.5 text-[22px] sm:text-[32px] leading-none tracking-wide no-underline" style="font-family: var(--font-script); color: var(--text);">
+    JC
+  </a>
+
+  <div class="hidden items-center gap-5 md:flex">
+    <ul class="flex flex-nowrap gap-6 list-none">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={`${base}${link.href}`}
+            class:list={[
+              'text-[11px] font-medium uppercase tracking-wider no-underline transition-colors',
+              isActive(link.href) ? 'text-[var(--text)]' : 'text-[var(--text2)] hover:text-[var(--text)]',
+            ]}
+            style="letter-spacing: 0.07em;"
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <ThemeToggle />
+    <button
+      class="glass no-print relative inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-[11px] font-medium"
+      style="color: var(--fg-pill);"
+      id="print-btn"
+      aria-label="Print or save resume as PDF"
+    >
+      <i class="ti ti-download text-[13px]" aria-hidden="true"></i>
+      <span>PDF</span>
+    </button>
+  </div>
+
+  <div class="flex items-center gap-2 md:hidden">
+    <ThemeToggle />
+    <button
+      id="menu-toggle"
+      class="glass relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg"
+      style="color: var(--fg-pill);"
+      aria-label="Toggle navigation menu"
+      aria-expanded="false"
+    >
+      <i class="ti ti-menu-2 text-[18px]" aria-hidden="true"></i>
+    </button>
+  </div>
+</nav>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-x-0 top-14 z-[199] hidden flex-col gap-1 border-b-[0.5px] px-4 py-4 md:hidden"
+  style="background: var(--nav-bg); border-color: var(--border); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);"
+>
+  {navLinks.map((link) => (
+    <a
+      href={`${base}${link.href}`}
+      class:list={[
+        'rounded-lg px-3 py-2.5 text-xs font-medium uppercase tracking-wider no-underline transition-colors',
+        isActive(link.href) ? 'text-[var(--text)]' : 'text-[var(--text2)]',
+      ]}
+    >
+      {link.label}
+    </a>
+  ))}
+  <button class="no-print mt-1 inline-flex w-fit items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium" style="color: var(--text2);" id="print-btn-mobile">
+    <i class="ti ti-download text-[14px]" aria-hidden="true"></i> Download PDF
+  </button>
+</div>
+
+<script>
+  function init() {
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!toggle || !menu) return;
+    toggle.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      menu.classList.toggle('flex');
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+    menu.querySelectorAll('a').forEach((a) =>
+      a.addEventListener('click', () => {
+        menu.classList.add('hidden');
+        menu.classList.remove('flex');
+        toggle.setAttribute('aria-expanded', 'false');
+      })
+    );
+    document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+    document.getElementById('print-btn-mobile')?.addEventListener('click', () => window.print());
+  }
+  init();
+</script>

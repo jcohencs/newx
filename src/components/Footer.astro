@@ -1,0 +1,37 @@
+---
+import { contact, site } from '../lib/data';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const year = new Date().getFullYear();
+---
+
+<footer style="border-top: 0.5px solid var(--border);">
+  <div class="mx-auto grid max-w-[960px] grid-cols-1 gap-8 px-5 py-10 sm:grid-cols-3 sm:px-10">
+    <div>
+      <div class="mb-4 font-serif text-base" style="font-family: var(--font-serif); letter-spacing: -0.2px;">{site.name}</div>
+      <p class="max-w-[220px] text-[13px] leading-relaxed" style="color: var(--text2);">IT enthusiast based in {contact.location}.</p>
+    </div>
+    <div>
+      <div class="mb-4 font-serif text-base" style="font-family: var(--font-serif); letter-spacing: -0.2px;">Navigation</div>
+      <ul class="flex flex-col gap-2 list-none">
+        <li><a href={`${base}/#about`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);">About</a></li>
+        <li><a href={`${base}/#experience`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);">Experience</a></li>
+        <li><a href={`${base}/blog/`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);">Blog</a></li>
+        <li><a href={`${base}/contact/`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);">Contact</a></li>
+      </ul>
+    </div>
+    <div class="relative">
+      <div class="mb-4 font-serif text-base" style="font-family: var(--font-serif); letter-spacing: -0.2px;">Contact</div>
+      <ul class="flex flex-col gap-2 list-none">
+        <li><a href={`mailto:${contact.email}`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);"><i class="ti ti-mail text-[13px]" style="color: var(--muted);"></i> {contact.email}</a></li>
+        <li><a href={`tel:${contact.phoneHref}`} class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);"><i class="ti ti-phone text-[13px]" style="color: var(--muted);"></i> {contact.phone}</a></li>
+        <li><a href={contact.linkedinHref} target="_blank" rel="noopener" class="flex items-center gap-2 text-xs transition-colors hover:text-[var(--text)]" style="color: var(--text2);"><i class="ti ti-brand-linkedin text-[13px]" style="color: var(--muted);"></i> {contact.linkedin}</a></li>
+        <li><span class="flex items-center gap-2 text-xs" style="color: var(--text2);"><i class="ti ti-map-pin text-[13px]" style="color: var(--muted);"></i> {contact.location}</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="relative flex items-center justify-center overflow-hidden px-5 py-4 text-[11px]" style="border-top: 0.5px solid var(--border); color: var(--muted);">
+    <div class="footer-sig">JC</div>
+    <span class="relative z-10">© {year} {site.name}</span>
+  </div>
+</footer>
